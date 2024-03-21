@@ -58,7 +58,6 @@ jobs:
 #          path: app/build/reports/androidTests/connected/
 
   static-code-analysis:
-    needs: [instrumentation-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
@@ -68,6 +67,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       - name: SonarCloud Scan
         run: ./gradlew app:sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -86,7 +88,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
 
